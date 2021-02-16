@@ -1,4 +1,7 @@
 *.del
 *.json
 *.js
-*.php
+convert.php
+p3_test
+p3_package
+*.zip

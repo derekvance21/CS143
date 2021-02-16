@@ -1,0 +1,3 @@
+SELECT COUNT(DISTINCT year)
+FROM Laureate L LEFT OUTER JOIN Wins W ON L.id=W.lid
+WHERE orgName IS NOT NULL;

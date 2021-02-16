@@ -1,29 +1,19 @@
 import json
 
-with open("nobel-laureates.json", "r") as read_file:
+with open("/home/cs143/data/nobel-laureates.json", "r") as read_file:
     data = json.load(read_file)
-
-f = open("test.del", "w")
 
 laureates = {}
 laureates_file = open("laureates.del", "w")
 laureates_attrs = ['id', 'givenName', 'familyName', 'orgName', 'gender', 'originDate', 'originCity', 'originCountry']
 
-# cities = []
-# cities_file = open("cities.del", "w")
-# cities_keys = ['city', 'country']
-
 prizes = {}
 prizes_file = open("prizes.del", "w")
 prizes_attrs = ['awardYear', 'category', 'dateAwarded', 'prizeAmount']
 
-# affiliations = {}
-# affiliations_file = open("affiliations.del", "w")
-# affiliations_keys = ['prize', 'institution']
-
 affiliated = {}
 affiliated_file = open("affiliated.del", "w")
-affiliated_attrs = ['awardYear', 'category', 'affiliationName', 'affiliationCity', 'affiliationCountry']
+affiliated_attrs = ['lid', 'awardYear', 'category', 'affiliationName', 'affiliationCity', 'affiliationCountry']
 
 win = {}
 win_file = open("win.del", "w")
@@ -38,11 +28,6 @@ def getAttr(d, keys):
 
 def writeAttrs(file, d, attrs):
     for i in range(len(attrs)):
-        # if i + 1 < len(attrs):
-        #     delimiter = ","
-        # else:
-        #     delimiter = "\n"
-        # # delimiter = "," if (i + 1 < len(attrs)) else "\n"
         field = d[attrs[i]]
         field = "\"" + str(field) + "\"" if field else "\\N"
 
@@ -68,13 +53,8 @@ for laureate in data['laureates']:
     laureateInfo['id'] = lid
     writeAttrs(laureates_file, laureateInfo, laureates_attrs)
 
-    # # Cities
-    # if originCity and (originCity, originCountry) not in cities:
-    #     cities.append((originCity, originCountry))
-
     # Prizes
     nobelPrizes = getAttr(laureate, ['nobelPrizes'])
-    # laureate.get('nobelPrizes')
     if nobelPrizes:
         for nobelPrize in nobelPrizes:
             awardYear = getAttr(nobelPrize, ['awardYear'])
@@ -109,20 +89,8 @@ for laureate in data['laureates']:
                     affiliationCity = getAttr(prizeAffiliation, ['city', 'en'])
                     affiliationCountry = getAttr(prizeAffiliation, ['country', 'en'])
 
-                    # # Cities
-                    # if affiliationCity and (affiliationCity, affiliationCountry) not in cities:
-                    #     cities.append((affiliationCity, affiliationCountry))
-
-
-                    # Affiliations
-                    # if affiliationName not in affiliations:
-                    #     affiliations[affiliationName] = affiliationInfo
-                    # elif affiliationInfo != affiliations[affiliationName]:
-                    #     print("affiliationName: " + affiliationName + " has two affiliationInfo's: " + str(affiliationInfo) + ", " + str(affiliations[affiliationName]))
-
-
                     # Affiliated
-                    affiliationInfo = {'affiliationName': affiliationName, 'affiliationCity': affiliationCity, 'affiliationCountry': affiliationCountry}
+                    affiliationInfo = {'lid': lid, 'affiliationName': affiliationName, 'affiliationCity': affiliationCity, 'affiliationCountry': affiliationCountry}
                     if (awardYear, category) not in affiliated:
                         affiliated[(awardYear, category)] = []
                     if affiliationInfo not in affiliated[(awardYear, category)]:
@@ -147,9 +115,6 @@ for (awardYear, category) in affiliated:
         affiliation['awardYear'] = awardYear
         affiliation['category'] = category
         writeAttrs(affiliated_file, affiliation, affiliated_attrs)
-
-
-
 
 laureates_file.close()
 prizes_file.close()
