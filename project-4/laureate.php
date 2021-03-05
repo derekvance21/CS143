@@ -11,9 +11,8 @@ $filter = [ "id" => strval($id)];
 $options = ["projection" => ['_id' => 0]];
 $query = new MongoDB\Driver\Query($filter, $options);
 
-$rows = $mng->executeQuery("testdb.testcol", $query);
+$rows = $mng->executeQuery("nobel.laureates", $query);
 $laureate = current($rows->toArray());
-// unset($laureate->_id);
 
 if (!empty($laureate)) {
     echo json_encode($laureate);
